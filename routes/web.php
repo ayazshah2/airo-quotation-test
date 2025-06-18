@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QuotationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/quotation', [QuotationController::class, 'showForm'])->name('quotation.form');

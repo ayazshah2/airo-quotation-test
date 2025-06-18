@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Quotation extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'ages',
+        'currency_id',
+        'start_date',
+        'end_date',
+        'total',
+    ];
 }

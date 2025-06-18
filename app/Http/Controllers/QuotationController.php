@@ -13,7 +13,7 @@ class QuotationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'age' => 'required|string',
-            'currency_id' => 'required|in:EUR,GBP,USD',
+            'currency_id' => 'required|in:USD,EUR,GBP',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
@@ -28,12 +28,20 @@ class QuotationController extends Controller
         $tripLength = $start->diffInDays($end) + 1;
 
         $fixedRate = 3;
-        $total = 0;
 
+        $currencyMultipliers = [
+            'USD' => 1,
+            'EUR' => 0.87,
+            'GBP' => 0.75,
+        ];
+
+        $multiplier = $currencyMultipliers[$request->currency_id];
+
+        $total = 0;
         foreach ($ages as $age) {
             $age = (int) trim($age);
             $load = $this->getAgeLoad($age);
-            $total += $fixedRate * $load * $tripLength;
+            $total += $fixedRate * $load * $tripLength * $multiplier;
         }
 
         $quotation = Quotation::create([
@@ -61,5 +69,10 @@ class QuotationController extends Controller
             $age >= 61 && $age <= 70 => 1.0,
             default => 0,
         };
+    }
+
+    public function showForm()
+    {
+        return view('quotation');
     }
 }
